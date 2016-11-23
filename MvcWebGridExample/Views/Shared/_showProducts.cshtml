@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "ShowProducts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model IEnumerable<MvcWebGridExample.Models.Product>
+
+@using System.Web.Helpers;
+
+<style>
+    .webgrid {
+        margin: 4px;
+        border-collapse: collapse;
+        width: 90%;
+    }
+    
+    .header {
+        padding: 6px 5px;
+        text-align: center;
+        background-color: #e8eef4;
+        border-bottom: 2px solid #3966A2;
+        height: 40px;
+        font-weight: bold;
+        border-top: 2px solid #D6E8FF;
+        border-left: 2px solid #D6E8FF;
+        border-right: 2px solid #D6E8FF;
+    }
+
+    .webgrid th, .webgrid td {
+        border: 1px solid #C0C0C0;
+        padding: 5px;
+    }
+
+    .alt {
+        background-color: #E8E8E8;
+        color: #000;
+    }
+
+    .product {
+        width: 50px;
+        font-weight: bold;
+    }
+
+    .clickable {
+        cursor: pointer;
+        background: #ffff99;
+    }
+</style>
+
+<h4>Products</h4>
+
+<div id="grid">
+
+    @{
+        var grid = new System.Web.Helpers.WebGrid(Model, rowsPerPage: 5, defaultSort: "ProductName");
+    }
+
+    @grid.GetHtml(tableStyle: "webgrid",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+        columns: grid.Columns(
+            grid.Column("ProductID", "ID", canSort: true),
+            grid.Column(columnName: "ProductName", header: "ProductName", format: item => Html.ActionLink((string)item.ProductName, "Details", "Product", new { id = item.ProductID }, null), canSort: false),
+            grid.Column("QuantityPerUnit", "Qty Per Unit", canSort: false),
+            grid.Column("UnitPrice", "Unit Price", canSort: false),
+            grid.Column("UnitsInStock", header: "Units In Stock", format: item => item.UnitsInStock, canSort: false),
+            grid.Column("ReorderLevel", "Reorder Level", canSort: false)
+        )
+    )    
+</div>  
+<br />
+
+@section Scripts {
+    <script type="text/javascript">
+       $(function () {
+           $('tbody tr').hover(function () {
+               $(this).toggleClass('clickable');
+           }).on('click', function () {
+               location.href = '/Details/' + $(this).find('td:first').text();
+           });
+       });
+    </script>
+}
+

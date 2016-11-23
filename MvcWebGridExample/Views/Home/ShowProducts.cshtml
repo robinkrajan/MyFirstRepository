@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "ShowProducts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model IEnumerable<MvcWebGridExample.Models.Category>
+
+<h2>ShowProducts</h2>
+
+@using System.Web.Helpers;
+
+<style>
+    .webgrid {
+        margin: 4px;
+        border-collapse: collapse;
+        width: 300px;
+    }
+
+    /*.header {background-color: #E8E8E8; font-weight: bold; color:black}*/
+    .header {
+        padding: 6px 5px;
+        text-align: center;
+        background-color: #e8eef4;
+        border-bottom: 2px solid #3966A2;
+        height: 40px;
+        font-weight: bold;
+        border-top: 2px solid #D6E8FF;
+        border-left: 2px solid #D6E8FF;
+        border-right: 2px solid #D6E8FF;
+    }
+
+    .webgrid th, .webgrid td {
+        border: 1px solid #C0C0C0;
+        padding: 5px;
+    }
+
+    .alt {
+        background-color: #E8E8E8;
+        color: #000;
+    }
+
+    .product {
+        width: 50px;
+        font-weight: bold;
+    }
+
+    .clickable {
+        cursor: pointer;
+        background: #ffff99;
+    }
+</style>
+
+<h2>Basic Web Grid</h2>
+
+
+<div id="grid">
+
+    @{
+        var grid = new System.Web.Helpers.WebGrid(Model, defaultSort: "Name");
+    }
+
+    @* Simple grid *@
+    @*@grid.GetHtml()*@
+
+
+    @*Grid with simple colunn customisation*@
+    @*@grid.GetHtml(columns: grid.Columns(
+            grid.Column("Name"),
+            grid.Column("ListPrice", header:"List Price")
+            )
+        )
+    *@
+
+    @*Grid with more advanced column customisation*@
+    @grid.GetHtml(tableStyle: "webgrid",
+        headerStyle: "header",
+        alternatingRowStyle: "alt",
+        columns: grid.Columns(
+        grid.Column("ProductId", "ID", canSort: false),
+        grid.Column(columnName: "Name", header: "Name", format: item => Html.ActionLink((string)item.Name, "Details", "Product", new { id = item.ProductId }, null), canSort: false),
+        grid.Column("ListPrice", header: "List Price", format: item => item.ListPrice, canSort: false)
+        )
+    )
+
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+       $(function () {
+           $('tbody tr').hover(function () {
+               $(this).toggleClass('clickable');
+           }).on('click', function () {
+               location.href = '/Details/' + $(this).find('td:first').text();
+           });
+       });
+    </script>
+}
+

@@ -1,0 +1,58 @@
+﻿
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<a href="http://dotnetmentors.com"><img src="http://dotnetmentors.com/images/dotnetmentors.png" alt="dotnetmentors.com" /></a>
+
+<div style="margin-left:20px; margin-top:25px; width:90%">
+    <p>
+        <div style="width:15%; float:left; ">
+            <div>
+                <b>Categories</b>
+            </div>
+            <div>
+                @Html.ListBox("Categories", new SelectList(new[] { "" }), new { @class = "list-group", @style = "width: 100px; height:150px; margin:5px;" })
+            </div>
+        </div>
+        <div id="products" style="width:60%; float:left">
+
+        </div>
+    </p>
+</div>
+<br />
+<div style="margin-left:20px; align-items:center;   width:100%">
+    <p>
+        <a href="http://goo.gl/h3fSuy">dotnetmentors</a>
+        <br />
+        <a href="https://goo.gl/3rvkIa"><img src="http://goo.gl/E3NfeB" /></a><a href="https://goo.gl/vJGgxg"><img src="http://goo.gl/LNcoR5" /></a><a href="https://goo.gl/v16NRR"><img src="http://goo.gl/KP7dpY"></a>
+    </p>
+</div>
+
+
+<script type="text/JavaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        $.getJSON('home/GetCategoriesWithModel/', function (data) {
+
+            //clear the current content of the select
+            $('#Categories').empty();
+
+            //iterate over the data and append a select option
+            $.each(data, function (i, item) {
+                $('#Categories').append('<option value="' + item.CategoryID + '">'
+                    + item.CategoryName + '</option>');
+            })
+        });
+
+        $('#Categories').change(function () {
+            debugger;
+            $("#products").load('/home/ShowProducts', { categoryID: $(this).attr('value') });
+        });
+    });
+
+</script>
+
